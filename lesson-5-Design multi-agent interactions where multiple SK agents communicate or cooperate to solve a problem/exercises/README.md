@@ -20,3 +20,7 @@ exercises
     |   |   |_ solution_files
     |_ README.md
 ```
+
+Lesson 5:
+
+Design multi-agent interactions where multiple SK agents (or “characters”) communicate or cooperate to solve a problem, exploring patterns like agent teams or role specialization.

@@ -20,3 +20,7 @@ exercises
     |   |   |_ solution_files
     |_ README.md
 ```
+
+# Lesson 2
+
+Use the SK SDK (in  Python) to compose prompts and tools into runnable pipelines, effectively creating an agent that can plan and execute tasks.

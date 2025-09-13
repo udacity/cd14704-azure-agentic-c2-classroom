@@ -20,3 +20,9 @@ exercises
     |   |   |_ solution_files
     |_ README.md
 ```
+
+
+# Lesson 1
+
+Understand Semantic Kernel’s architecture and primary components: the Kernel, semantic skills (prompt functions), native skills (code functions), and memory integration.
+

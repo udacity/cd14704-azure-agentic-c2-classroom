@@ -20,3 +20,7 @@ exercises
     |   |   |_ solution_files
     |_ README.md
 ```
+
+# Lesson 6:
+
+Compare and understand when to use SK vs. Azure AI Agent Service: e.g., SK for custom development needs or on-prem scenarios, Agent Service for managed deployment and easy integration
