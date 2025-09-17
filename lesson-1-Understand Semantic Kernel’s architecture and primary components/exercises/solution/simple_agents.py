@@ -2,10 +2,10 @@ import os
 import asyncio
 from dotenv import load_dotenv
 
-from semantic_kernel import <TODO> # import kernel
-from semantic_kernel.connectors.ai.open_ai import <TODO>, <TODO> # import Azure Chat and Execution Settings
-from semantic_kernel.agents import <TODO>  # import Chat Completion Agent
-from semantic_kernel.functions import <TODO> # import Kernel Arguments
+from semantic_kernel import Kernel
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion, OpenAIChatPromptExecutionSettings
+from semantic_kernel.agents import ChatCompletionAgent
+from semantic_kernel.functions import KernelArguments
 
 # -----------------
 # Load environment
@@ -14,38 +14,38 @@ load_dotenv()
 AZURE_OPENAI_KEY = os.getenv("AZURE_OPENAI_KEY")
 BASE_URL = os.getenv("URL")
 API_VERSION = "2024-12-01-preview"
-DEPLOYMENT = <TODO> # define the correct LLM deployment
+DEPLOYMENT = "gpt-4.1-mini"
 
 # -----------------
 # Kernel & service
 # -----------------
-kernel = <TODO> # initialize the kernel
-chat_service = <TODO>( # define the correct chat service object
+kernel = Kernel()
+chat_service = AzureChatCompletion(
     deployment_name=DEPLOYMENT,
     api_key=AZURE_OPENAI_KEY,
     base_url=f"{BASE_URL}{DEPLOYMENT}",
     api_version=API_VERSION
 )
-kernel.add_service(<TODO>) # add the chat service to the kernel
+kernel.add_service(chat_service)
 
 # -----------------
 # Helper to create agents
 # -----------------
 def create_agent(name: str, instructions: str, temperature=0.7, max_tokens=300):
-    settings = <TODO> # instantiate the execution settings object
-    settings.<TODO> = temperature # assign temperature to the correct settings object argument
-    settings.<TODO> = max_tokens # assign max tokens to the correct settings object argument
+    settings = OpenAIChatPromptExecutionSettings()
+    settings.temperature = temperature
+    settings.max_tokens = max_tokens
     return ChatCompletionAgent(
         service=chat_service,
         name=name,
         instructions=instructions,
-        arguments=<TODO>(<TODO>) # instantiate the arguments objects with the settings object as argument
+        arguments=KernelArguments(settings)
     )
 
 # -----------------
 # Define agents
 # -----------------
-data_analyst_agent = <TODO>( # use the correct helper function
+data_analyst_agent = create_agent(
     "DataAnalyst",
     """
 You are an expert in data analysis and statistics.
@@ -54,7 +54,7 @@ If it is not, respond with: "I cannot answer this question as it is outside my e
 """
 )
 
-math_agent = <TODO>( # use the correct helper function
+math_agent = create_agent(
     "MathAgent",
     """
 You are a mathematician.
@@ -63,7 +63,7 @@ If it is not, respond with: "I cannot answer this question as it is outside my e
 """
 )
 
-translator_agent = <TODO>( # use the correct helper function
+translator_agent = create_agent(
     "TranslatorAgent",
     """
 You are a translator.
@@ -72,7 +72,7 @@ If it is not, respond with: "I cannot answer this question as it is outside my e
 """
 )
 
-literature_agent = <TODO>( # use the correct helper function
+literature_agent = create_agent(
     "LiteratureAgent",
     """
 You are a literature expert.
@@ -81,7 +81,7 @@ If it is not, respond with: "I cannot answer this question as it is outside my e
 """
 )
 
-agents = <TODO> # add all agents to a list
+agents = [data_analyst_agent, math_agent, translator_agent, literature_agent]
 
 # -----------------
 # Main
@@ -99,10 +99,10 @@ async def main():
     for i, prompt in enumerate(prompts, start=1):
         print("\n" + "-" * 20)
         print(f"Prompt {i}: {prompt}")
-        for agent in <TODO>: # iterate through the agents list
+        for agent in agents:
             print(f"\n[{agent.name}]")
-            async for message in agent.<TODO>(prompt): # call the agent object's invoke method
-                print(f"{<TODO>}\n", end="") # print the agents response message
+            async for message in agent.invoke(prompt):
+                print(f"{message}\n", end="")
 
 if __name__ == "__main__":
     asyncio.run(main())

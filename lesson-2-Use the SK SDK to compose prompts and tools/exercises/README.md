@@ -24,3 +24,7 @@ exercises
 # Lesson 2
 
 Use the SK SDK (in  Python) to compose prompts and tools into runnable pipelines, effectively creating an agent that can plan and execute tasks.
+Implementing Agentic Prompt Chaining Workflows with Python
+Implement a prompt chaining workflow where the output of one agent becomes the input for the next to achieve a sequential goal.
+
+

@@ -26,3 +26,6 @@ exercises
 
 Understand Semantic Kernel’s architecture and primary components: the Kernel, semantic skills (prompt functions), native skills (code functions), and memory integration.
 
+Agentic Workflow Implementation with Semantic Kernel
+Implement a sequential agentic workflow in Python by creating and coordinating multiple agent classes.
+

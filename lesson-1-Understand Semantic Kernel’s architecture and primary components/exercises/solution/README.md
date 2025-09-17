@@ -1,30 +1,48 @@
-# Semantic Kernel Architecture Exercise
+# Semantic Kernel Prompt Chaining
 
 ## Learning Objectives
 
-This exercise will help you understand Semantic Kernel's core architecture and primary components:
-- **The Kernel**: Central orchestration hub for AI services and functions
-- **Semantic Skills (Prompt Functions)**: AI-powered functions using natural language prompts
+This exercise will help you understand how to build specialized, chained agents with Semantic Kernel that collaboratively produce a complex, multi‑domain plan. You will explore:
+
+- **The Kernel** — the central hub for registering and managing AI services and plugins
+- **ChatCompletionAgents** — role‑specific AI agents with tailored instructions and execution settings
+- **Plugin Integration** — enabling agents to call external functions (e.g., weather forecast)
+- **Chained Execution** — passing evolving context from one agent to the next
+- **Async streaming** — handling incremental responses from each agent
 
 ## Exercise Overview
 
-You will implement a specialized data analysis agent using Semantic Kernel that demonstrates the framework's key architectural components. The agent should be able to handle data analysis questions while rejecting queries outside its domain of expertise.
+You will implement four specialized agents — Safety Engineer, Regulation Expert, Weather Adaptation Specialist, and Final Integration Manager — all powered by Semantic Kernel and sharing the same Azure OpenAI service.
+
+Instead of answering independently, these agents work sequentially:
+
+1. **SafetyAgent** — drafts a baseline safety plan for a hydrocarbon processing plant
+2. **RegulationAgent** — integrates OSHA, EPA, and API/NFPA compliance requirements
+3. **WeatherAgent** — adapts the plan for forecasted weather conditions using a weather plugin
+4. **FinalIntegrationAgent** — merges all sections into a coherent, final service plan
+
+This demonstrates multi‑agent orchestration where each agent builds on the previous output.
 
 ## Requirements
 
 ### Prerequisites
+
 - Python 3.8+
-- Azure OpenAI account with GPT-4 deployment
-- Basic understanding of async/await patterns in Python
+- Azure OpenAI account with a gpt‑4.1‑mini deployment
+- Basic understanding of Python's async/await
 
 ### Dependencies
+
 Install the required packages:
+
 ```bash
 pip install semantic-kernel python-dotenv
 ```
 
 ### Environment Setup
-Create a `.env` file in your project root with the following variables:
+
+Create a `.env` file in your project root with:
+
 ```
 AZURE_OPENAI_KEY=your_azure_openai_api_key
 URL=your_azure_openai_endpoint_url
@@ -32,74 +50,91 @@ URL=your_azure_openai_endpoint_url
 
 ## Task Description
 
-Implement a Python script that creates a specialized ChatCompletionAgent with the following specifications:
+Implement a Python script that:
 
-### 1. Kernel Setup
-- Initialize a Semantic Kernel instance
-- Configure and register an Azure OpenAI chat completion service
-- Use GPT-4.1-mini deployment with API version "2024-12-01-preview"
+### 1. Initializes the Kernel
 
-### 2. Agent Configuration
-Create a ChatCompletionAgent that:
-- Specializes in data analysis expertise
-- Can explain complex statistical analysis concepts
-- Refuses to answer questions outside the data analysis domain
-- Uses specific execution settings (temperature: 1.0, max_tokens: 300)
+- Creates a Kernel instance
+- Registers an AzureChatCompletion service
+- Uses deployment gpt-4.1-mini with API version 2024-12-01-preview
 
-### 3. Testing Scenarios
-Your implementation should handle these test prompts:
-1. "What is the average of 11,22,33" (should answer)
-2. "Summarize the plot of Romeo and Juliet" (should refuse)
-3. "List the first 5 prime numbers" (should refuse) 
-4. "Translate 'Good morning' into Spanish" (should refuse)
-5. "Give me a statistical summary for this data: 233,555,9866,2345,77" (should answer)
+### 2. Adds a Weather Plugin
+
+- Defines a WeatherPlugin class with a search function
+- Uses @kernel_function so agents can call it natively
+- Returns simulated weather data (can be replaced with a real API)
+
+### 3. Defines Multiple Agents
+
+- **SafetyAgent** — low temperature (0.3) for deterministic, standards‑aligned safety plans
+- **RegulationAgent** — slightly higher temperature (0.35) to merge multiple regulatory frameworks
+- **WeatherAgent** — mid‑range temperature (0.55) for creative adaptation to weather scenarios
+- **FinalIntegrationAgent** — higher temperature (0.7) for narrative flow and integration
+
+Each agent:
+- Receives the shared Kernel (so it can call plugins)
+- Has its own role‑specific instructions
+- Uses OpenAIChatPromptExecutionSettings to control temperature and token limits
+
+### 4. Chains Agent Execution
+
+- Starts with an initial prompt describing the task and location
+- Passes the evolving current_output from one agent to the next
+- Streams each agent's output asynchronously
+- Prints the final integrated service plan
+
+## Testing Scenarios
+
+Example variations to try:
+
+- Change location to test different weather forecasts
+- Adjust temperature values to see how creativity vs. determinism affects output
+- Replace the simulated weather data with a real API call for live adaptation
+- Add more agents (e.g., Cost Analyst, Environmental Impact Reviewer) to extend the chain
 
 ## Expected Behavior
 
-- **Data Analysis Questions**: The agent should provide helpful, detailed responses about statistical concepts and data analysis
-- **Non-Data Questions**: The agent should politely decline to answer questions outside its specialized domain
-- **Output Format**: Each test prompt should be clearly labeled with its number and the agent's response should be prefixed with "Agent says:"
+- **Sequential enrichment** — each agent builds on the previous agent's output
+- **Plugin usage** — WeatherAgent calls the WeatherPlugin to adapt the plan
+- **Role fidelity** — each agent stays within its domain of expertise
+- **Final integration** — coherent, well‑structured service plan at the end
 
 ## Key Concepts to Demonstrate
 
 ### Kernel Architecture
-- How the Kernel serves as the central coordination point
-- Service registration and management
-- Integration between different SK components
+- Centralized registration of AI services and plugins
+- Shared kernel instance across multiple agents
 
 ### Agent Specialization
-- Using instructions to create domain-specific AI agents
-- How prompt engineering controls agent behavior
-- Configuration of execution parameters
+- Role‑specific instructions and execution settings
+- Temperature tuning for precision vs. creativity
+
+### Plugin Integration
+- Using @kernel_function to expose Python functions to agents
+- Allowing agents to autonomously invoke plugins
 
 ### Async Operations
-- Proper use of async/await for SK operations
-- Streaming responses from agents
-- Event loop management
+- Streaming responses from each agent
+- Sequential chaining while preserving intermediate outputs
 
 ## Success Criteria
 
 Your solution should:
-1. Successfully initialize a Semantic Kernel with Azure OpenAI service
-2. Create a specialized data analysis agent that follows its instructions
-3. Demonstrate appropriate responses to both in-domain and out-of-domain queries
-4. Use proper async patterns for all SK operations
-5. Show clear understanding of SK's component architecture
 
-## Extension Challenges
-
-Once you complete the basic implementation, try these extensions:
-1. Add memory integration to maintain conversation context
-2. Create custom native functions for specific statistical calculations
-3. Implement semantic functions using prompt templates
-4. Add logging to trace kernel operations
+- Initialize a Semantic Kernel with Azure OpenAI service
+- Register and use a weather plugin
+- Create four specialized agents with clear roles
+- Pass evolving context through the agent chain
+- Stream and display each agent's output
+- Produce a coherent final service plan
 
 ## Architecture Notes
 
-This exercise demonstrates several key Semantic Kernel concepts:
-- **Service-Oriented Architecture**: How AI services are abstracted and registered
-- **Agent Pattern**: Specialized AI agents with specific instructions and capabilities
-- **Execution Settings**: Fine-tuning AI behavior through configuration
-- **Async Streaming**: Real-time response generation and processing
+This exercise demonstrates:
 
-Understanding these patterns will prepare you for building more complex AI applications with Semantic Kernel.
+- **Service‑Oriented Design** — one AI service powering multiple agents
+- **Agent Chain Pattern** — sequential role‑based processing
+- **Execution Settings** — fine‑tuning temperature and token limits per agent
+- **Plugin‑Driven Adaptation** — dynamic plan modification based on external data
+
+Mastering these patterns will prepare you to build scalable, domain‑specialized, multi‑agent AI systems with Semantic Kernel.

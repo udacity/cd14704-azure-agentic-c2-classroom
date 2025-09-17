@@ -2,12 +2,14 @@
 
 ## Learning Objectives
 
-This exercise will help you understand Semantic Kernel's core architecture and primary components:
-- **The Kernel**: Central orchestration hub for AI services and functions
-- **Semantic Skills (Prompt Functions)**: AI-powered functions using natural language prompts
-- **Native Skills (Code Functions)**: Traditional code-based functions
-- **Memory Integration**: How SK manages context and state
-- **Service Registration**: How AI services are connected to the kernel
+This exercise will help you understand how to build multiple specialized agents with Semantic Kernel and have them independently decide whether to respond to a given prompt. You will explore:
+
+- **The Kernel** — the central hub for registering and managing AI services
+- **ChatCompletionAgents** — domain‑specific AI agents with their own instructions and constraints
+- **Self‑filtering logic** — using prompt engineering so each agent can refuse out‑of‑scope questions
+- **Memory Integration:** How SK manages context and state
+- **Async streaming** — handling responses from multiple agents concurrently
+
 
 ## Exercise Overview
 
@@ -22,6 +24,7 @@ You will implement a specialized data analysis agent using Semantic Kernel that 
 
 ### Dependencies
 Install the required packages:
+
 ```bash
 pip install semantic-kernel python-dotenv
 ```
@@ -104,14 +107,6 @@ Your solution should:
    - Non-data questions (prompts 2, 3, and 4) should be politely declined
 5. Use proper async patterns for all SK operations
 6. Show clear understanding of SK's component architecture through your implementation
-
-## Extension Challenges
-
-Once you complete the basic implementation, try these extensions:
-1. Add memory integration to maintain conversation context
-2. Create custom native functions for specific statistical calculations
-3. Implement semantic functions using prompt templates
-4. Add logging to trace kernel operations
 
 ## Architecture Notes
 
