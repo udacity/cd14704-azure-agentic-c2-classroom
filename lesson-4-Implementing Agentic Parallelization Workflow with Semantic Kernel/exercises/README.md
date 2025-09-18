@@ -21,6 +21,8 @@ exercises
     |_ README.md
 ```
 
-Lesson 5:
+# Lesson 4:
 
-Design multi-agent interactions where multiple SK agents (or “characters”) communicate or cooperate to solve a problem, exploring patterns like agent teams or role specialization.
+Utilize SK’s Planner/Agent plugins to enable dynamic decision-making (the AI choosing which function to use next), enabling more autonomous multi-step reasoning.
+Implementing Agentic Parallelization Workflows with Python
+Students implement a parallel workflow using Python's threading module, where multiple specialist agents analyze a document concurrently, and a synthesizer agent combines their findings.

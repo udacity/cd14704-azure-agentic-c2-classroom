@@ -24,3 +24,6 @@ exercises
 # Lesson 3:
 
 Implement memory and state in SK: connect to vector databases or Azure Cognitive Search to give your agent long-term recollection of information.
+Implementing Agentic Routing Workflows with Python
+Students implement a routing system where a router agent uses an LLM to classify a query and then dispatches it to the correct specialist agent, which may involve orchestrating sub-tasks.
+

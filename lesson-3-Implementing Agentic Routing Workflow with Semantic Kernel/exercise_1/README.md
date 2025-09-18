@@ -21,6 +21,9 @@ exercises
     |_ README.md
 ```
 
-# Lesson 4:
+# Lesson 3:
 
-Utilize SK’s Planner/Agent plugins to enable dynamic decision-making (the AI choosing which function to use next), enabling more autonomous multi-step reasoning.
+Implement memory and state in SK: connect to vector databases or Azure Cognitive Search to give your agent long-term recollection of information.
+Implementing Agentic Routing Workflows with Python
+Students implement a routing system where a router agent uses an LLM to classify a query and then dispatches it to the correct specialist agent, which may involve orchestrating sub-tasks.
+
